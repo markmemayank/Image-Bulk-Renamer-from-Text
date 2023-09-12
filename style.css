@@ -1,0 +1,89 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    background-color: #f4f4f4;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 80%;  /* Added to ensure it looks good on larger screens */
+    margin: 0 auto;    /* To center the container */
+}
+
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.input-group {
+    flex: 1;
+    min-width: 48%;  /* This ensures there's a small gap between the two input groups. */
+    margin-bottom: 20px;
+    margin-right: 4%; /* Added to provide spacing between the two input groups. */
+}
+
+/* We also add this to remove the right margin from the second input group to ensure alignment. */
+.input-group:last-child {
+    margin-right: 0;
+}
+
+
+input[type="file"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;  /* Added to provide spacing after the label. */
+    display: block;
+    width: 100%;
+}
+
+button {
+    background-color: #011993;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-block;  /* Added to center the button */
+    margin: 0 auto;         /* Added to center the button */
+}
+
+button:hover {
+    background-color: #0026cc;
+}
+
+#downloadLink {
+    display: none;
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #011993;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+#downloadLink:hover {
+    background-color: #0026cc;
+}
+
+#imageList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#imageList li {
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    margin-top: 10px;
+    border-radius: 4px;
+    background-color: #fff;
+}

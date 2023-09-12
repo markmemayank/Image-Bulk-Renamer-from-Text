@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Image Renamer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #downloadLink {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;  /* Added margin to separate the two inputs */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" style="text-align: center;">
+        <h1>Image Bulk Renamer from Text</h1>
+        <p> Make sure that the number of uploaded images and lines of text should be equal to perform this correctly.</p>
+        <br>
+
+        <div class="input-container">
+            <div class="input-group" style="text-align: left;">
+                <label for="imageFiles"><b>Upload your image files here:</b></label>
+                <input type="file" id="imageFiles" accept="image/*" multiple>
+            </div>
+            
+            <div class="input-group" style="text-align: left;">
+                <label for="imageTitles"><b>Enter image titles here (one title per line):</b></label>
+                <textarea id="imageTitles" rows="10" cols="40"></textarea>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button onclick="processFiles()">Process Files</button>
+        </div>
+
+        <ul id="imageList"></ul>
+        <a id="downloadLink" href="#">Download All Renamed Images</a>
+    </div>
+
+    <script>
+        function processFiles() {
+            const imageFiles = Array.from(document.getElementById('imageFiles').files);
+            const titles = document.getElementById('imageTitles').value.trim().split("\n"); 
+
+            if (imageFiles.length === 0 || titles.length === 0) {
+                alert('Please upload images and provide image titles.');
+                return;
+            }
+
+            if (titles.length !== imageFiles.length) {
+                alert('Number of images does not match the number of titles. Please ensure they are equal.');
+                return;
+            }
+
+            renameFiles(imageFiles, titles);
+        }
+
+        function renameFiles(imageFiles, titles) {
+            const promises = imageFiles.map((file, index) => {
+                const extension = file.name.split('.').pop();
+                const renamedFileName = `${titles[index]}.${extension}`;
+                
+                console.log('Renaming:', file.name, 'to', renamedFileName);
+
+                const li = document.createElement('li');
+                li.textContent = renamedFileName;
+                document.getElementById('imageList').appendChild(li);
+
+                return readFileAsArrayBuffer(file).then(data => ({
+                    name: renamedFileName,
+                    data
+                }));
+            });
+
+            Promise.all(promises).then(renamedFiles => {
+                createDownloadLink(renamedFiles);
+            });
+        }
+
+        function readFileAsArrayBuffer(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    resolve(event.target.result);
+                };
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(file);
+            });
+        }
+
+        function createDownloadLink(files) {
+            const zip = new JSZip();
+
+            files.forEach(file => {
+                zip.file(file.name, file.data);
+            });
+
+            zip.generateAsync({ type: "blob" }).then(content => {
+                const url = URL.createObjectURL(content);
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = url;
+                downloadLink.download = "renamed_images.zip";
+                downloadLink.style.display = "block";
+            });
+        }
+    </script>
+
+</body>
+
+</html>
